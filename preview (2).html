@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KutralMC Store</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap" rel="stylesheet">
+
+<style>
+body{margin:0;font-family:Poppins;background:#0b1220;color:white}
+
+/* HERO */
+.hero{
+text-align:center;
+padding:80px 20px;
+background:url('https://i.imgur.com/3ZQ3Z4F.jpg') center/cover;
+}
+.logo{font-size:55px;font-weight:800;color:orange;text-shadow:0 0 20px orange}
+.ip{background:#1e293b;display:inline-block;padding:10px 20px;margin-top:15px;border-radius:8px;cursor:pointer}
+.btn{padding:12px 20px;border:none;margin:5px;border-radius:8px;cursor:pointer;font-weight:bold}
+.primary{background:#22c55e}
+
+/* OFERTA */
+.offer{
+background:linear-gradient(90deg,orange,gold);
+color:black;
+padding:15px;
+text-align:center;
+font-weight:bold;
+}
+
+/* GRID */
+.container{max-width:1100px;margin:auto;padding:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:15px}
+.card{background:#1e293b;padding:15px;border-radius:10px;text-align:center;position:relative}
+.badge{position:absolute;top:10px;right:10px;background:red;padding:5px;border-radius:5px}
+.buy{background:#22c55e;width:100%;margin-top:10px}
+
+/* COMPRAS */
+.purchase{
+display:flex;justify-content:space-between;
+background:#334155;padding:10px;margin:5px 0;border-radius:6px;align-items:center
+}
+.name{color:#22c55e}
+
+/* FOOTER */
+.footer{text-align:center;padding:20px;color:gray}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+<div class="logo">🔥 KutralMC</div>
+<p>Survival • Factions • Eventos</p>
+
+<div class="ip" onclick="copyIP()">kutralmccc.holy.gg</div>
+
+<br>
+<button class="btn primary" onclick="scrollShop()">🛒 Comprar</button>
+
+<p id="online">Cargando servidor...</p>
+</div>
+
+<div class="offer">
+🔥 30% DESCUENTO TERMINA EN <span id="countdown"></span>
+</div>
+
+<div class="container">
+
+<h2>Rangos</h2>
+<div class="grid">
+
+<div class="card">
+<span class="badge">TOP</span>
+<h3>VIP</h3>
+<p>$3 USD</p>
+<button class="btn buy" onclick="buy('VIP')">Comprar</button>
+</div>
+
+<div class="card">
+<h3>VIP+</h3>
+<p>$5 USD</p>
+<button class="btn buy" onclick="buy('VIP+')">Comprar</button>
+</div>
+
+<div class="card">
+<h3>FAMOSO</h3>
+<p>$8 USD</p>
+<button class="btn buy" onclick="buy('FAMOSO')">Comprar</button>
+</div>
+
+<div class="card">
+<h3>LEGENDARIO</h3>
+<p>$12 USD</p>
+<button class="btn buy" onclick="buy('LEGENDARIO')">Comprar</button>
+</div>
+
+</div>
+
+<h2>Compras recientes</h2>
+<div id="list"></div>
+
+</div>
+
+<div class="footer">
+© KutralMC 2026
+</div>
+
+<script>
+
+// 🔗 PON TUS LINKS DE TEBEX AQUÍ
+const links={
+"VIP":"https://TU-TIENDA.tebex.io/package/1",
+"VIP+":"https://TU-TIENDA.tebex.io/package/2",
+"FAMOSO":"https://TU-TIENDA.tebex.io/package/3",
+"LEGENDARIO":"https://TU-TIENDA.tebex.io/package/4"
+};
+
+function buy(item){
+window.open(links[item],"_blank");
+}
+
+// IP
+function copyIP(){
+navigator.clipboard.writeText("kutralmccc.holy.gg");
+alert("IP copiada");
+}
+
+// SCROLL
+function scrollShop(){
+window.scrollTo({top:500,behavior:"smooth"});
+}
+
+// SKINS + COMPRAS
+const players=["ZilanTalk","TioPandaPerkin","DavidMC","LauraGames","MrProx14","KevinPlayYT"];
+const items=["VIP","VIP+","FAMOSO","LEGENDARIO"];
+
+function addPurchase(name,item){
+const list=document.getElementById("list");
+
+const div=document.createElement("div");
+div.className="purchase";
+
+div.innerHTML=`
+<div style="display:flex;align-items:center;gap:10px;">
+<img src="https://mc-heads.net/avatar/${name}/32">
+<span class="name">${name}</span> compró ${item}
+</div>
+<div>${Math.floor(Math.random()*10)+1} min</div>
+`;
+
+list.prepend(div);
+if(list.children.length>10) list.removeChild(list.lastChild);
+}
+
+// AUTO
+setInterval(()=>{
+addPurchase(
+players[Math.floor(Math.random()*players.length)],
+items[Math.floor(Math.random()*items.length)]
+);
+},6000);
+
+// SERVER REAL
+async function server(){
+try{
+const r=await fetch("https://api.mcsrvstat.us/2/kutralmccc.holy.gg");
+const d=await r.json();
+document.getElementById("online").textContent =
+d.online ? "🟢 "+d.players.online+" online" : "🔴 Offline";
+}catch{
+document.getElementById("online").textContent="Error";
+}
+}
+setInterval(server,10000);
+server();
+
+// COUNTDOWN
+let time=3600;
+setInterval(()=>{
+time--;
+let m=Math.floor(time/60);
+let s=time%60;
+document.getElementById("countdown").textContent=
+m+":"+String(s).padStart(2,"0");
+if(time<=0) time=3600;
+},1000);
+
+</script>
+
+</body>
+</html>
